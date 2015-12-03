@@ -8,9 +8,14 @@ module FirewallCookbook
       if p && p.is_a?(Integer)
         p.to_s
       elsif p && p.is_a?(Array)
+        p.map! { |o| port_to_s(o) }
         p.sort.join(',')
       elsif p && p.is_a?(Range)
-        "#{p.first}:#{p.last}"
+        if platform_family?('windows')
+          "#{p.first}-#{p.last}"
+        else
+          "#{p.first}:#{p.last}"
+        end
       end
     end
 
